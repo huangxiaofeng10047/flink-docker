@@ -14,3 +14,4 @@ in the same folder and version 1.11. Please substitute your folder structure and
 5. Generate docker image (in `flink-docker/dev/flink-1.11-debian`): `docker build -t flink:1.11-SN .`
 6. Run custom Flink docker image: `docker run -it flink:1.11-SN jobmanager`
 
+update by hxf
