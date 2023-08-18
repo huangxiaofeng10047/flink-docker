@@ -246,7 +246,7 @@ function test_docker_entrypoint() {
 
     originalLdPreloadSetting=$LD_PRELOAD
 
-    ./docker-entrypoint.sh $(pwd)/testing/bin/docker-entrypoint.sh hello world "$originalLdPreloadSetting" false
+    ./bin/docker-entrypoint.sh $(pwd)/testing/bin/docker-entrypoint.sh hello world "$originalLdPreloadSetting" false
     DISABLE_JEMALLOC=true ./docker-entrypoint.sh $(pwd)/testing/bin/docker-entrypoint.sh hello world "$originalLdPreloadSetting" true
 }
 
