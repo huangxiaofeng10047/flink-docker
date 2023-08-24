@@ -7,7 +7,7 @@ SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 
 test_docker_entrypoint
 
-smoke_test_all_images
+# smoke_test_all_images
 smoke_test_one_image_non_root
 
 

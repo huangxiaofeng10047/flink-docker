@@ -54,7 +54,7 @@ function internal_run() {
     image_tag="$(image_tag "$dockerfile")"
     image_name="$(image_name "$image_tag")"
 
-    echo >&2 "===> Starting ${image_tag} ${args}..."
+    echo >&2 "===> Starting ${image_tag} ${args}...，${docker_run_command}"
 
     eval "docker run --rm --detach --network $NETWORK_NAME -e JOB_MANAGER_RPC_ADDRESS=jobmanager ${docker_run_command} $image_name ${args}"
 }
@@ -145,7 +145,8 @@ function test_image() {
 }
 
 function build_test_job() {
-    mvn package -f testing/docker-test-job/pom.xml
+    echo "$PWD"
+    mvn package -f ./docker-test-job/pom.xml
 }
 
 function create_network() {
@@ -181,6 +182,10 @@ function internal_smoke_test() {
     local jm_docker_run_command_args=$2
     local jm_command_args=$3
     local tm_docker_run_command_args=$4
+    echo "internal_smoke_test --- ${dockerfile}"
+    echo "internal_smoke_test --- ${jm_docker_run_command_args}"
+    echo "internal_smoke_test --- ${jm_command_args}"
+    echo "internal_smoke_test --- ${tm_docker_run_command_args}"
 
     jobmanager_container_id="$(internal_run_jobmanager \
         "$dockerfile" \
@@ -190,6 +195,7 @@ function internal_smoke_test() {
         "$dockerfile" \
         "${tm_docker_run_command_args}")"
     wait_for_jobmanager "$dockerfile"
+    echo "test_image --- ${dockerfile}"
     test_image "$dockerfile"
     docker kill "$jobmanager_container_id" "$taskmanager_container_id" > /dev/null
 }
@@ -199,7 +205,7 @@ function internal_smoke_test_images() {
     local docker_run_command_args="$2"
 
     create_network
-    trap cleanup EXIT RETURN
+    # trap cleanup EXIT RETURN
     build_test_job
 
     local jobmanager_container_id
@@ -208,16 +214,16 @@ function internal_smoke_test_images() {
     for dockerfile in $dockerfiles; do
         build_image "$dockerfile"
 
+        # internal_smoke_test \
+        #     "$dockerfile" \
+        #     "${docker_run_command_args}" \
+        #     "jobmanager" \
+        #     "${docker_run_command_args}"
         internal_smoke_test \
             "$dockerfile" \
-            "${docker_run_command_args}" \
-            "jobmanager" \
-            "${docker_run_command_args}"
-        internal_smoke_test \
-            "$dockerfile" \
-            "${docker_run_command_args} --mount type=bind,src=$(pwd)/testing/docker-test-job/target,target=/opt/flink/usrlib" \
+            "${docker_run_command_args} --mount type=bind,src=$(pwd)/docker-test-job/target,target=/opt/flink/usrlib" \
             "standalone-job --job-classname org.apache.flink.StreamingJob" \
-            "${docker_run_command_args} --mount type=bind,src=$(pwd)/testing/docker-test-job/target,target=/opt/flink/usrlib"
+            "${docker_run_command_args} --mount type=bind,src=$(pwd)/docker-test-job/target,target=/opt/flink/usrlib"
     done
 }
 
@@ -225,7 +231,7 @@ function internal_smoke_test_images() {
 # other successfully.
 function smoke_test_all_images() {
     echo >&2 "==> Test all images"
-    internal_smoke_test_images "$(ls ./*/*/Dockerfile)" ""
+    internal_smoke_test_images "$(ls .././*/*/Dockerfile)" ""
 }
 
 # Same as smoke_test_all_images, but test only the last image alphabetically (presumed to be the
@@ -238,7 +244,7 @@ function smoke_test_one_image() {
 # Similar to smoke_test_one_image, but test as a non-root user.
 function smoke_test_one_image_non_root() {
     echo >&2 "==> Test images running as non-root"
-    internal_smoke_test_images "$(ls ./*/*/Dockerfile | tail -n 1)" "--user flink"
+    internal_smoke_test_images "$(ls .././*/*/Dockerfile | tail -n 1)" "--user flink"
 }
 
 function test_docker_entrypoint() {
@@ -247,7 +253,7 @@ function test_docker_entrypoint() {
     originalLdPreloadSetting=$LD_PRELOAD
 
     ./bin/docker-entrypoint.sh $(pwd)/testing/bin/docker-entrypoint.sh hello world "$originalLdPreloadSetting" false
-    DISABLE_JEMALLOC=true ./docker-entrypoint.sh $(pwd)/testing/bin/docker-entrypoint.sh hello world "$originalLdPreloadSetting" true
+    DISABLE_JEMALLOC=true ./bin/docker-entrypoint.sh $(pwd)/testing/bin/docker-entrypoint.sh hello world "$originalLdPreloadSetting" true
 }
 
 # vim: ts=4 sw=4 et

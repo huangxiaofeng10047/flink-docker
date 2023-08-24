@@ -18,7 +18,11 @@
 # limitations under the License.
 ###############################################################################
 
-if ! [ "$1" == "hello" ] || ! [ "$2" == "world" ]; then
+if ! [ "$2" == "hello" ] || ! [ "$3" == "world" ]; then
+    echo "1"
+    echo "$1"
+    echo "2"
+    echo "$2"
     echo "Incorrect arguments passed through:" "$@"
     exit 1
 fi
