@@ -4,7 +4,7 @@ metadata:
   namespace: flink-standalone-session
   name: session-tm-deploy
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: flink
@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: taskmanager
-        image: 10.7.20.51/bcs_dev/flink:1.18-SN
+        image: 10.7.20.12:5000/flink:1.19-SN
         workingDir: /opt/flink
         command: ["/bin/bash", "-c", "$FLINK_HOME/bin/taskmanager.sh start;
           while :;
@@ -31,11 +31,11 @@ spec:
           name: rpc
         resources: 
           limits:
-            cpu: "2"
-            memory: "2Gi"
+            cpu: "1"
+            memory: "1Gi"
           requests:
-            cpu: "2"
-            memory: "2Gi"
+            cpu: "1"
+            memory: "1Gi"
         livenessProbe:
           tcpSocket:
             port: 6122

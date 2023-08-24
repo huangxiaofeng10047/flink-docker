@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: jobmanager
-        image: 10.7.20.51/bcs_dev/flink:1.18-SN
+        image: 10.7.20.12:5000/flink:1.19-SN
         workingDir: /opt/flink
         command: ["/bin/bash", "-c", "$FLINK_HOME/bin/jobmanager.sh start;
           while :;
