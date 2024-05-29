@@ -1,9 +1,9 @@
-version: '3.7'
+version: "3.7"
 services:
   jobmanager:
     # image: flink:1.15.4
     # image: sqlsubmit-job:latest
-    image: flink:1.19
+    image: flink:1.20.1-SN
     volumes:
       - /data/flink/job/flink-doris-connector-1.15-1.2.1.jar:/opt/flink/lib/flink-doris-connector-1.15-1.2.1.jar
       - /data/flink/job/flink-sql-connector-mysql-cdc-2.2.1.jar:/opt/flink/lib/flink-sql-connector-mysql-cdc-2.2.1.jar
@@ -18,7 +18,7 @@ services:
   taskmanager:
     # image: flink:1.15.4
     # image: sqlsubmit-job:latest
-    image: flink:1.19
+    image: flink:1.20.1-SN
     volumes:
       - /data/flink/task/flink-doris-connector-1.15-1.2.1.jar:/opt/flink/lib/flink-doris-connector-1.15-1.2.1.jar
       - /data/flink/task/flink-sql-connector-mysql-cdc-2.2.1.jar:/opt/flink/lib/flink-sql-connector-mysql-cdc-2.2.1.jar
@@ -32,3 +32,4 @@ services:
       - "jobmanager:jobmanager"
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
+
