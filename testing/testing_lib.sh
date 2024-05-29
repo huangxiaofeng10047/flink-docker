@@ -9,7 +9,7 @@
 
 CURL_TIMEOUT=1
 CURL_COOLDOWN=1
-CURL_MAX_TRIES=30
+CURL_MAX_TRIES=1000
 CURL_ENDPOINT=localhost:8081/overview
 IMAGE_REPO=docker-flink-test
 NETWORK_NAME=docker-flink-test-net
@@ -60,7 +60,7 @@ function internal_run() {
 }
 
 function internal_run_jobmanager() {
-    internal_run "$1" "--name jobmanager --publish 6123:6123 --publish 8081:8081 $2" "$3"
+    internal_run "$1" "--name jobmanager --publish 6123:6123  --publish 8081:8081 $2" "$3"
 }
 
 function internal_run_taskmanager() {

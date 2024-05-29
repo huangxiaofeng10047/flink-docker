@@ -25,7 +25,7 @@ public class StreamingJob {
 
 	public static void main(String[] args) throws Exception {
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-		env.addSource(new InfiniteSource()).map(x -> x);
+		env.fromElements(new InfiniteSource()).map(x -> x);
 		env.execute();
 	}
 
